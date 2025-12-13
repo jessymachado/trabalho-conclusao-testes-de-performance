@@ -1,0 +1,7 @@
+[
+  { "horario": "09:00", "servico": "CORTE" },
+  { "horario": "09:30", "servico": "COLORAÇÃO" },
+  { "horario": "10:00", "servico": "ESCOVA" },
+  { "horario": "10:30", "servico": "CORTE" },
+  { "horario": "11:00", "servico": "ESCOVA" }
+]
