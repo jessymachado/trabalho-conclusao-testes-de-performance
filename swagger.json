@@ -1,0 +1,340 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Agendamento do Salão de Beleza",
+    "version": "1.0.0",
+    "description": "API para agendamento de horários, registro, login e consulta de usuários em um salão de beleza."
+  },
+  "paths": {
+    "/usuario/registrarUsuario": {
+      "post": {
+        "summary": "Registra um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário registrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário já existe ou dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuario/logarUsuario": {
+      "post": {
+        "summary": "Realiza login do usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Credenciais inválidas ou dados ausentes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuario/consultarUsuarios": {
+      "get": {
+        "summary": "Lista todos os usuários cadastrados",
+        "responses": {
+          "200": {
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "usuarios": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Usuario"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agendamento/marcar": {
+      "post": {
+        "summary": "Marcar agendamento (login obrigatório)",
+        "security": [ { "bearerAuth": [] } ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AgendamentoInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Agendamento realizado com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AgendamentoResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de agendamento",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "401": {
+            "description": "Login obrigatório",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agendamento/desmarcar": {
+      "put": {
+        "summary": "Desmarcar agendamento (login obrigatório)",
+        "security": [ { "bearerAuth": [] } ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AgendamentoDesmarcarInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Horário agendado foi desmarcado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AgendamentoDesmarcarResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao desmarcar",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "401": {
+            "description": "Login obrigatório",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agendamento/horariosDisponiveis": {
+      "get": {
+        "summary": "Listar próximos 5 dias úteis (TER a SÁB) e horários disponíveis",
+        "responses": {
+          "200": {
+            "description": "Horários disponíveis",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HorariosDisponiveisResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agendamento/horariosAgendados/{date}": {
+      "get": {
+        "summary": "Listar agendamentos por data",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "17/09/2025" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Horários agendados",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HorariosAgendadosResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "AgendamentoInput": {
+        "type": "object",
+        "required": ["nomeCliente", "telefoneCliente", "dataAgendada", "horarioAgendado", "servico"],
+        "properties": {
+          "nomeCliente": { "type": "string", "example": "Jessica" },
+          "telefoneCliente": { "type": "string", "example": "51982844440" },
+          "dataAgendada": { "type": "string", "example": "17/09/2025" },
+          "horarioAgendado": { "type": "string", "example": "09:00" },
+          "servico": { "type": "string", "enum": ["CORTE", "COLORAÇÃO", "ESCOVA"], "example": "CORTE" }
+        }
+      },
+      "AgendamentoResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "Agendamento realizado com sucesso!" },
+          "agendamento": { "$ref": "#/components/schemas/AgendamentoInput" }
+        }
+      },
+      "AgendamentoDesmarcarInput": {
+        "type": "object",
+        "required": ["nomeCliente", "telefoneCliente", "dataAgendada", "horarioAgendado"],
+        "properties": {
+          "nomeCliente": { "type": "string", "example": "Jessica" },
+          "telefoneCliente": { "type": "string", "example": "51982844440" },
+          "dataAgendada": { "type": "string", "example": "17/09/2025" },
+          "horarioAgendado": { "type": "string", "example": "09:00" }
+        }
+      },
+      "AgendamentoDesmarcarResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "Horário agendado foi desmarcado." }
+        }
+      },
+      "HorariosDisponiveisResponse": {
+        "type": "object",
+        "properties": {
+          "horariosDisponiveis": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "datas": { "type": "string", "example": "17/09/2025" },
+                "horarios": {
+                  "type": "array",
+                  "items": { "type": "string", "example": "09:00" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "HorariosAgendadosResponse": {
+        "type": "object",
+        "properties": {
+          "horariosAgendados": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Datas": { "type": "string", "example": "17/09/2025" },
+                "Horario": { "type": "string", "example": "09:00" },
+                "Cliente": { "type": "string", "example": "Jessica" },
+                "Celular": { "type": "string", "example": "51982844440" },
+                "Servico": { "type": "string", "example": "CORTE" }
+              }
+            }
+          }
+        }
+      },
+      "UsuarioInput": {
+        "type": "object",
+        "required": ["usuario", "senha"],
+        "properties": {
+          "usuario": {
+            "type": "string",
+            "example": "jessica"
+          },
+          "senha": {
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "usuario": {
+            "type": "string",
+            "example": "jessica"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Usuário já existe."
+          }
+        }
+      }
+    }
+  }
+}
