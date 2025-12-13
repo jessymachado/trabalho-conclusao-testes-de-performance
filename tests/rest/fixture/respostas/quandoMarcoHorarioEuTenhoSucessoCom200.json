@@ -1,0 +1,9 @@
+{  
+  "agendamento": {
+    "nomeCliente": "Patrícia",
+    "telefoneCliente": "51982899999",
+    "dataAgendada": "20/09/2025",
+    "horarioAgendado": "11:30",
+    "servico": "COLORAÇÃO"
+  }
+}
