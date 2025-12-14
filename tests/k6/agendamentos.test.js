@@ -6,11 +6,7 @@ import faker from 'k6/x/faker';
 import { SharedArray } from 'k6/data';
 import { efetuarLogin } from './utils/login.test.js';
 
-export const options = {
-    vus: 2,
-    iterations: 2
-};
-
+const BASE_URL = __ENV.BASE_URL_REST;
 
 const dados = new SharedArray('agendamentos', () =>
     JSON.parse(open('./data/agendamentos.data.json'))
@@ -19,8 +15,19 @@ const dados = new SharedArray('agendamentos', () =>
 
 export default function () {
     let token = ''
+    let responseMarcarAgendamento;
     const idx = (__VU - 1) % dados.length;
     const user = usuarios[(__VU - 1) % usuarios.length];
+
+    const payloadMarcarHorario = {
+        nomeCliente: faker.person.name(),
+        telefoneCliente: faker.person.phone(),
+        dataAgendada: '',
+        horarioAgendado: '',
+        servico: '',
+    };
+
+    let dataParaMarcacao = ''
 
     group('Fazendo login com sucesso', function () {
         token = efetuarLogin(user);
@@ -43,31 +50,26 @@ export default function () {
     });
 
     group('Marcar agendamento com sucesso', function () {
-        const dias = getProximosDiasUteis();
-        const indiceAleatorio = Math.floor(Math.random() * dias.length);
-        const dataSelecionada = dias[indiceAleatorio];
 
-        const payloadMarcarHorario = {
-            nomeCliente: faker.person.name(),
-            telefoneCliente: faker.person.phone(),
-            dataAgendada: dataSelecionada,
-            horarioAgendado: dados[idx].horario,
-            servico: dados[idx].servico,
-        };
+        payloadMarcarHorario.dataAgendada = dataParaMarcacao.data;
+        payloadMarcarHorario.horarioAgendado = dataParaMarcacao.horario;
+        payloadMarcarHorario.servico = dataParaMarcacao.servico;
 
-        let responseMarcarAgendamento = http.post(`${BASE_URL}/agendamento/marcar`,
-            JSON.stringify(
-                payloadMarcarHorario),
+        responseMarcarAgendamento = http.post(
+            `${BASE_URL}/agendamento/marcar`,
+            JSON.stringify(payloadMarcarHorario),
             {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
-            });
-        
+            }
+        );
+
+        console.log(responseMarcarAgendamento.body)
         check(responseMarcarAgendamento, {
             'status da marcação deve ser 201': (resp) => resp.status === 201,
-            'mensagem deve ser de sucesso': (resp) =>
+            'mensagem de marcação deve ser de sucesso': (resp) =>
                 resp.json('message') === 'Agendamento realizado com sucesso!',
         });
     });
