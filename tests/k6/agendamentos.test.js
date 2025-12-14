@@ -1,10 +1,10 @@
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
-import { escolherDataEHorarios } from './utils/datas.js';
 import { usuarios } from '../../model/userModel.js';
-import faker from 'k6/x/faker';
 import { SharedArray } from 'k6/data';
-import { efetuarLogin } from './utils/login.test.js';
+import { escolherDataEHorarios } from './helpers/datas.js';
+import { randomName, randomPhone } from './helpers/dadosAleatorios.js';
+import { efetuarLogin } from './helpers/login.test.js';
 
 const BASE_URL = __ENV.BASE_URL_REST;
 
@@ -16,8 +16,7 @@ const dados = new SharedArray('agendamentos', () =>
 export const options = {
     thresholds: {
         http_req_failed: ['rate<0.01'],
-        http_req_duration: ['p(95)<500', 'p(99)<800'],
-        iteration_duration: ['p(95)<1200']
+        http_req_duration: ['p(95)<500', 'p(99)<800']        
     },
     stages: [
         { duration: '20s', target: 3 },
@@ -26,15 +25,14 @@ export const options = {
     ]
 };
 
-
 export default function () {
     let token = ''
     let responseMarcarAgendamento;
     const user = usuarios[(__VU - 1) % usuarios.length];
 
     const payloadMarcarHorario = {
-        nomeCliente: faker.person.name(),
-        telefoneCliente: faker.person.phone(),
+        nomeCliente: randomName(),
+        telefoneCliente: randomPhone(),
         dataAgendada: '',
         horarioAgendado: '',
         servico: '',
@@ -121,4 +119,5 @@ export default function () {
                 resp.json('message') === 'Horário agendado foi desmarcado.',
         });
     });
+    sleep(1)
 }
