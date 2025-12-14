@@ -14,15 +14,22 @@ const dados = new SharedArray('agendamentos', () =>
 
 
 export const options = {
-    vus: 4,
-    iterations: 4
+    thresholds: {
+        http_req_failed: ['rate<0.01'],
+        http_req_duration: ['p(95)<500', 'p(99)<800'],
+        iteration_duration: ['p(95)<1200']
+    },
+    stages: [
+        { duration: '20s', target: 3 },
+        { duration: '40s', target: 3 },
+        { duration: '20s', target: 0 },
+    ]
 };
 
 
 export default function () {
     let token = ''
     let responseMarcarAgendamento;
-    const idx = (__VU - 1) % dados.length;
     const user = usuarios[(__VU - 1) % usuarios.length];
 
     const payloadMarcarHorario = {
@@ -51,8 +58,6 @@ export default function () {
 
         const dados = responseConsultaHorarios.json();
         dataParaMarcacao = escolherDataEHorarios(dados);
-
-        console.log('Data escolhida:', JSON.stringify(dataParaMarcacao, null, 3));
     });
 
     group('Marcar agendamento com sucesso', function () {
