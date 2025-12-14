@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
-import { HORARIOS, SERVICOS } from './helpers/constantes.js';
+import { escolherDataEHorarios } from './utils/datas.js';
 import { usuarios } from '../../model/userModel.js';
 import faker from 'k6/x/faker';
 import { SharedArray } from 'k6/data';
@@ -24,6 +24,22 @@ export default function () {
 
     group('Fazendo login com sucesso', function () {
         token = efetuarLogin(user);
+    });
+
+    group('Listar horários disponíveis', function () {
+
+        const responseConsultaHorarios = http.get(
+            `${BASE_URL}/agendamento/horariosDisponiveis/`
+        );
+
+        check(responseConsultaHorarios, {
+            'status da lista de horários deve ser 200': (r) => r.status === 200,
+        });
+
+        const dados = responseConsultaHorarios.json();
+        dataParaMarcacao = escolherDataEHorarios(dados);
+
+        console.log('Data escolhida:', JSON.stringify(dataParaMarcacao, null, 3));
     });
 
     group('Marcar agendamento com sucesso', function () {
