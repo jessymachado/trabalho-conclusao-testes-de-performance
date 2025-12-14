@@ -13,6 +13,12 @@ const dados = new SharedArray('agendamentos', () =>
 );
 
 
+export const options = {
+    vus: 4,
+    iterations: 4
+};
+
+
 export default function () {
     let token = ''
     let responseMarcarAgendamento;
@@ -66,7 +72,6 @@ export default function () {
             }
         );
 
-        console.log(responseMarcarAgendamento.body)
         check(responseMarcarAgendamento, {
             'status da marcação deve ser 201': (resp) => resp.status === 201,
             'mensagem de marcação deve ser de sucesso': (resp) =>
@@ -91,6 +96,24 @@ export default function () {
                         item.horarioAgendado === payloadMarcarHorario.horarioAgendado &&
                         item.telefoneCliente === payloadMarcarHorario.telefoneCliente
                 )
+        });
+    });
+
+    group('Desmarcar os horários agendados', function () {
+
+        let responseDesmarcarAgendamento = http.put(`${BASE_URL}/agendamento/desmarcar`,
+            JSON.stringify(payloadMarcarHorario),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+        check(responseDesmarcarAgendamento, {
+            'status da desmarcação deve ser 200': (resp) => resp.status === 200,
+            'mensagem deve ser de sucesso': (resp) =>
+                resp.json('message') === 'Horário agendado foi desmarcado.',
         });
     });
 }
