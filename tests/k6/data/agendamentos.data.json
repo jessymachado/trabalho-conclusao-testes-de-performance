@@ -1,7 +1,14 @@
 [
-  { "horario": "09:00", "servico": "CORTE" },
-  { "horario": "09:30", "servico": "COLORAÇÃO" },
-  { "horario": "10:00", "servico": "ESCOVA" },
-  { "horario": "10:30", "servico": "CORTE" },
-  { "horario": "11:00", "servico": "ESCOVA" }
+  { "horario": "09:00", "servico": "ESCOVA" },
+  { "horario": "10:00", "servico": "CORTE" },
+  { "horario": "10:30", "servico": "COLORAÇÃO" },
+  { "horario": "11:00", "servico": "ESCOVA" },
+  { "horario": "11:30", "servico": "CORTE" },
+  { "horario": "13:30", "servico": "ESCOVA" },
+  { "horario": "14:00", "servico": "COLORAÇÃO" },
+  { "horario": "15:00", "servico": "CORTE" },
+  { "horario": "16:00", "servico": "ESCOVA" },
+  { "horario": "16:30", "servico": "CORTE" },
+  { "horario": "17:30", "servico": "COLORAÇÃO" },
+  { "horario": "18:00", "servico": "ESCOVA" }
 ]

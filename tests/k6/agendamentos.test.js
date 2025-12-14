@@ -73,4 +73,24 @@ export default function () {
                 resp.json('message') === 'Agendamento realizado com sucesso!',
         });
     });
+
+    group('Consultar horários agendados', function () {
+
+        let responseConsultaHorarios = http.get(
+            `${BASE_URL}/agendamento/horariosAgendados/${encodeURIComponent(payloadMarcarHorario.dataAgendada)}`
+        );
+
+        const dados = JSON.parse(responseConsultaHorarios.body);
+        console.log(dados)
+
+        check(responseConsultaHorarios, {
+            "o horário agendado deve estar presente": () =>
+                dados.horariosAgendados.some(
+                    (item) =>
+                        item.dataAgendada === payloadMarcarHorario.dataAgendada &&
+                        item.horarioAgendado === payloadMarcarHorario.horarioAgendado &&
+                        item.telefoneCliente === payloadMarcarHorario.telefoneCliente
+                )
+        });
+    });
 }
