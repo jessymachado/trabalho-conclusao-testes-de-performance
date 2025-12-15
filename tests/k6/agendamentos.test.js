@@ -2,6 +2,7 @@ import http from 'k6/http';
 import { check, sleep, group } from 'k6';
 import { usuarios } from '../../model/userModel.js';
 import { SharedArray } from 'k6/data';
+import { Trend } from 'k6/metrics';
 import { escolherDataEHorarios } from './helpers/datas.js';
 import { randomName, randomPhone } from './helpers/dadosAleatorios.js';
 import { efetuarLogin } from './helpers/login.test.js';
@@ -13,11 +14,14 @@ const dados = new SharedArray('agendamentos', () =>
 );
 
 
+const trendTempoMarcarAgendamento = new Trend('tempo_marcar_agendamento');
+
+
 
 export const options = {
     thresholds: {
         http_req_failed: ['rate<0.01'],
-        http_req_duration: ['p(95)<500', 'p(99)<800']        
+        http_req_duration: ['p(95)<500', 'p(99)<800']
     },
     stages: [
         { duration: '20s', target: 3 },
@@ -76,6 +80,7 @@ export default function () {
                 }
             }
         );
+        trendTempoMarcarAgendamento.add(responseMarcarAgendamento.timings.duration);
 
         check(responseMarcarAgendamento, {
             'status da marcação deve ser 201': (resp) => resp.status === 201,
@@ -91,7 +96,6 @@ export default function () {
         );
 
         const dados = JSON.parse(responseConsultaHorarios.body);
-        console.log(dados)
 
         check(responseConsultaHorarios, {
             "o horário agendado deve estar presente": () =>
