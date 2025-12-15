@@ -10,6 +10,7 @@ graph TD
     A --> F[graphql]
     A --> G[tests]
     A --> H[k6-reports]
+    A --> Z[docs]
 
     %% Tests
     G --> I[k6]
@@ -42,13 +43,13 @@ Segue abaixo as asserções de performance que se encontram no objeto de configu
     * p(99) → 99% das requisições  devem responder em menos de x milisegundos
 
     ``` 
-  export const options = {
-      thresholds: {
-          http_req_failed: ['rate<0.01'],
-          http_req_duration: ['p(95)<500', 'p(99)<800']        
-      }
-  };
-  ```
+    export const options = {
+        thresholds: {
+            http_req_failed: ['rate<0.01'],
+            http_req_duration: ['p(95)<500', 'p(99)<800']        
+        }
+    };
+    ```
 
 ## Checks
 São pontos de checagens do código, inserido após a chamada de um requisição, a ideia seria
@@ -139,8 +140,10 @@ O projeto conta com a parametrização das stages abaixo:
 ## Reaproveitamento de Resposta
 A variável 'dataParaMarcacao' recebe o retorno da função escolherDataEHorarios, que utiliza como entrada os dados retornados pela API de horários disponíveis, já convertidos para JSON.
 Essa função seleciona aleatoriamente uma combinação válida de data, horário e serviço, e o resultado é então reutilizado para compor o payload da requisição de marcação.
+
 A imagem abaixo ilustra esse comportamento.
-![alt text](reaproveitamento_requisicoes.png)
+
+![Reaproveitamento da imagens](docs/reaproveitamento_requisicoes.png)
 
 
 ## Uso de Token de Autenticação
