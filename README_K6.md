@@ -53,7 +53,7 @@ Segue abaixo as asserções de performance que se encontram no objeto de configu
 
 ## Checks
 São pontos de checagens do código, inserido após a chamada de um requisição, a ideia seria
-uma checagem básica a nível esperado e não um detalhamento de validações funcionais.
+uma checagem básica a nível esperado e não um detalhamento de validações funcionais. 
 
 Esse trecho verifica se, ao consultar os horários agendados, existe pelo menos um registro que corresponde exatamente ao horário, à data e ao cliente que acabou de realizar o agendamento.
 
@@ -71,7 +71,7 @@ Esse trecho verifica se, ao consultar os horários agendados, existe pelo menos 
 
         
 ## Helpers
-No helpers para auxílio foram colocados 3 arquivos.
+No helpers para auxílio foram inseridos 3 arquivos.
   * datas.js: funções relacionadas as datas que serão utilizadas pelo teste.
   * dadosAleatorios.js: geração de dados dinâmicos.
   * login.test.js: onde foi abstraído para uma função a chamada para realizar um login.
@@ -79,6 +79,7 @@ No helpers para auxílio foram colocados 3 arquivos.
 
 ## Trends
 Trends são métricas usadas para medir e analisar o comportamento de valores ao longo do tempo, principalmente tempos de resposta.
+
 No arquivo de teste foi incluída extensão para a utilização da métrica a seguir:
 ``` 
   import { Trend } from 'k6/metrics';
@@ -88,7 +89,7 @@ O objetivo desta métrica é medir o tempo exclusivamente da requisição de mar
 ``` 
   trendTempoMarcarAgendamento.add(responseMarcarAgendamento.timings.duration);  
 ``` 
-Segue um exemplo da visualização após a execução
+Segue um exemplo da visualização após a execução:
 ``` 
  CUSTOM
     tempo_marcar_agendamento.......: avg=6.82308 min=2.1368 med=5.3484 max=17.7891 p(90)=11.48237 p(95)=14.428285
@@ -187,7 +188,7 @@ const horariosValidos = horariosEServicos.filter(h =>
     dia.horarios.includes(h.horario)
 );
  ``` 
-Sendo assim, os dados são carregados uma única vez e são compartilhados entre todos os VUs
+Sendo assim, os dados são carregados uma única vez e são compartilhados entre todos os VUs.
 
 
 ## Groups
@@ -221,7 +222,7 @@ group('Marcar agendamento com sucesso', function () {
 ```
 group('Consultar horários agendados', function () {
   
-    //Consulta o horário agendado a partir do payload payloadMarcarHorario, passando a data como parâmetro. Ao final do testes é validado se os dados retornados na consutla são equivalentes ao agendamento que foi feito para aquela data, horário e telefone.
+    //Consulta o horário agendado a partir do payload payloadMarcarHorario, passando a data como parâmetro. Ao final do testes é validado se os dados retornados na consulta são equivalentes ao agendamento que foi feito para aquela data, horário e telefone.
 
 });
 ```
@@ -232,3 +233,9 @@ group('Desmarcar os horários agendados', function () {
 
 });
 ```
+
+## Relatório
+Este relatório não é nativo do k6, ele é gerado pela biblioteca externa k6-reporter, que transforma os dados coletados pelo k6 em um arquivo HTML visual e em JSON detalhado, facilitando a análise de métricas de desempenho, latência e sucesso das requisições.
+
+O relatório de teste se encontra na pasta k6-reports.
+
