@@ -9,8 +9,9 @@ import { efetuarLogin } from './helpers/login.test.js';
 const BASE_URL = __ENV.BASE_URL_REST;
 
 const dados = new SharedArray('agendamentos', () =>
-    JSON.parse(open('./data/agendamentos.data.json'))
+    JSON.parse(open('./data/horariosEServicos.data.json'))
 );
+
 
 
 export const options = {
@@ -54,8 +55,9 @@ export default function () {
             'status da lista de horários deve ser 200': (r) => r.status === 200,
         });
 
-        const dados = responseConsultaHorarios.json();
-        dataParaMarcacao = escolherDataEHorarios(dados);
+        const retornoDadosConsulta = responseConsultaHorarios.json();
+        dataParaMarcacao = escolherDataEHorarios(retornoDadosConsulta, dados);
+
     });
 
     group('Marcar agendamento com sucesso', function () {
