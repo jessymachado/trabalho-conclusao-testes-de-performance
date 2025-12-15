@@ -6,6 +6,14 @@ import { Trend } from 'k6/metrics';
 import { escolherDataEHorarios } from './helpers/datas.js';
 import { randomName, randomPhone } from './helpers/dadosAleatorios.js';
 import { efetuarLogin } from './helpers/login.test.js';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
+
+export function handleSummary(data) {
+  return {
+    'k6-reports/report.html': htmlReport(data),
+    'k6-reports/result.json': JSON.stringify(data, null, 2),
+  };
+}
 
 const BASE_URL = __ENV.BASE_URL_REST;
 

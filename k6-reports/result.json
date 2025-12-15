@@ -1,0 +1,323 @@
+{
+  "state": {
+    "isStdOutTTY": true,
+    "isStdErrTTY": true,
+    "testRunDurationMs": 80560.7916
+  },
+  "metrics": {
+    "http_req_blocked": {
+      "contains": "time",
+      "values": {
+        "p(95)": 0,
+        "avg": 0.014056972972972972,
+        "min": 0,
+        "med": 0,
+        "max": 2.5113,
+        "p(90)": 0
+      },
+      "type": "trend"
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 485390,
+        "rate": 6025.139405407729
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 1029.0372,
+        "max": 1147.8456,
+        "p(90)": 1053.736,
+        "p(95)": 1060.1789800000001,
+        "avg": 1033.5321529729733,
+        "min": 1009.5219
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0.5126,
+        "med": 4.6068,
+        "max": 74.2546,
+        "p(90)": 11.93594,
+        "p(95)": 14.816459999999998,
+        "avg": 6.293291135135142
+      }
+    },
+    "http_req_sending": {
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 3.5439,
+        "p(90)": 0.02372000000000004,
+        "p(95)": 0.50698,
+        "avg": 0.04339199999999999,
+        "min": 0
+      },
+      "type": "trend"
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 3
+      }
+    },
+    "iterations": {
+      "contains": "default",
+      "values": {
+        "count": 185,
+        "rate": 2.29640245987851
+      },
+      "type": "counter"
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 4.951199027027034,
+        "min": 0,
+        "med": 3.3307,
+        "max": 73.9329,
+        "p(90)": 10.327960000000001,
+        "p(95)": 13.3111
+      }
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 5.847900432432443,
+        "min": 0,
+        "med": 4.2026,
+        "max": 73.9329,
+        "p(90)": 11.0867,
+        "p(95)": 13.784339999999995
+      },
+      "thresholds": {
+        "p(95)<500": {
+          "ok": true
+        },
+        "p(99)<800": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.0032972972972972973,
+        "min": 0,
+        "med": 0,
+        "max": 1.4473,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 1110,
+        "fails": 0
+      }
+    },
+    "tempo_marcar_agendamento": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "avg": 4.776675675675675,
+        "min": 0,
+        "med": 3.9629,
+        "max": 18.0871,
+        "p(90)": 8.0942,
+        "p(95)": 9.446619999999994
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "rate": 3019.6451048775443,
+        "count": 243265
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 5.847900432432443,
+        "min": 0,
+        "med": 4.2026,
+        "max": 73.9329,
+        "p(90)": 11.0867,
+        "p(95)": 13.784339999999995
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 925
+      },
+      "thresholds": {
+        "rate<0.01": {
+          "ok": true
+        }
+      }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 925,
+        "rate": 11.482012299392549
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.8533094054054057,
+        "min": 0,
+        "med": 0.4498,
+        "max": 20.2713,
+        "p(90)": 2.1237600000000008,
+        "p(95)": 4.261099999999999
+      }
+    }
+  },
+  "root_group": {
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "name": "Fazendo login com sucesso",
+        "path": "::Fazendo login com sucesso",
+        "id": "8ca195ea92d0104e907ed4605bf4e60d",
+        "groups": [],
+        "checks": []
+      },
+      {
+        "groups": [],
+        "checks": [
+            {
+              "name": "status da lista de horários deve ser 200",
+              "path": "::Listar horários disponíveis::status da lista de horários deve ser 200",
+              "id": "5d117396fb8db0141760bd2fcedefd56",
+              "passes": 185,
+              "fails": 0
+            }
+          ],
+        "name": "Listar horários disponíveis",
+        "path": "::Listar horários disponíveis",
+        "id": "07b74cbf275ccdaad474899240d76d8e"
+      },
+      {
+        "name": "Marcar agendamento com sucesso",
+        "path": "::Marcar agendamento com sucesso",
+        "id": "1f7fd88fff06600cd4736910a1965410",
+        "groups": [],
+        "checks": [
+            {
+              "fails": 0,
+              "name": "status da marcação deve ser 201",
+              "path": "::Marcar agendamento com sucesso::status da marcação deve ser 201",
+              "id": "7a71b6653e9ce3f14adcc8ba13634e96",
+              "passes": 185
+            },
+            {
+              "name": "mensagem de marcação deve ser de sucesso",
+              "path": "::Marcar agendamento com sucesso::mensagem de marcação deve ser de sucesso",
+              "id": "94cc6584ae7f6a13103b2bbdfe9a8046",
+              "passes": 185,
+              "fails": 0
+            }
+          ]
+      },
+      {
+        "name": "Consultar horários agendados",
+        "path": "::Consultar horários agendados",
+        "id": "51f364c124e7fa5afeed8cb68f719cef",
+        "groups": [],
+        "checks": [
+            {
+              "passes": 185,
+              "fails": 0,
+              "name": "o horário agendado deve estar presente",
+              "path": "::Consultar horários agendados::o horário agendado deve estar presente",
+              "id": "01478a7168a0ecd297fcb720fb40b3e9"
+            }
+          ]
+      },
+      {
+        "path": "::Desmarcar os horários agendados",
+        "id": "529cd3c8ed7c36ee0cc080543aca7bf9",
+        "groups": [],
+        "checks": [
+            {
+              "name": "status da desmarcação deve ser 200",
+              "path": "::Desmarcar os horários agendados::status da desmarcação deve ser 200",
+              "id": "1b935bb61ab2fe35535f308a12674987",
+              "passes": 185,
+              "fails": 0
+            },
+            {
+              "name": "mensagem deve ser de sucesso",
+              "path": "::Desmarcar os horários agendados::mensagem deve ser de sucesso",
+              "id": "198aa2a8aa1c3d45769fa36cd132dbef",
+              "passes": 185,
+              "fails": 0
+            }
+          ],
+        "name": "Desmarcar os horários agendados"
+      }
+    ],
+    "checks": [],
+    "name": "",
+    "path": ""
+  },
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  }
+}
