@@ -1,7 +1,3 @@
-# Explicações dos conceitos aplicados no código
-Esta API permite registrar, logar e consultar usuários, além de agendar horários para serviços em um salão de beleza. Documentação disponível via Swagger.
-
-
 ## Estrutura do projeto 
   ```mermaid
 graph TD
