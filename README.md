@@ -69,3 +69,6 @@ Rode `npm run start-graphql` para executar a API do GraphQL e acesse a URL http:
 
 
 
+## Conceitos empregados k6:
+- [Documentação detalhada](README_K6.md)
+

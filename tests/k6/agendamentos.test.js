@@ -1,0 +1,137 @@
+import http from 'k6/http';
+import { check, sleep, group } from 'k6';
+import { usuarios } from '../../model/userModel.js';
+import { SharedArray } from 'k6/data';
+import { Trend } from 'k6/metrics';
+import { escolherDataEHorarios } from './helpers/datas.js';
+import { randomName, randomPhone } from './helpers/dadosAleatorios.js';
+import { efetuarLogin } from './helpers/login.test.js';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
+
+export function handleSummary(data) {
+  return {
+    'k6-reports/report.html': htmlReport(data),
+    'k6-reports/result.json': JSON.stringify(data, null, 2),
+  };
+}
+
+const BASE_URL = __ENV.BASE_URL_REST;
+
+const dados = new SharedArray('agendamentos', () =>
+    JSON.parse(open('./data/horariosEServicos.data.json'))
+);
+
+
+const trendTempoMarcarAgendamento = new Trend('tempo_marcar_agendamento');
+
+
+
+export const options = {
+    thresholds: {
+        http_req_failed: ['rate<0.01'],
+        http_req_duration: ['p(95)<500', 'p(99)<800']
+    },
+    stages: [
+        { duration: '20s', target: 3 },
+        { duration: '40s', target: 3 },
+        { duration: '20s', target: 0 },
+    ]
+};
+
+export default function () {
+    let token = ''
+    let responseMarcarAgendamento;
+    const user = usuarios[(__VU - 1) % usuarios.length];
+
+    const payloadMarcarHorario = {
+        nomeCliente: randomName(),
+        telefoneCliente: randomPhone(),
+        dataAgendada: '',
+        horarioAgendado: '',
+        servico: '',
+    };
+
+    let dataParaMarcacao = ''
+
+    group('Fazendo login com sucesso', function () {
+        token = efetuarLogin(user);
+    });
+
+    group('Listar horários disponíveis', function () {
+
+        const responseConsultaHorarios = http.get(
+            `${BASE_URL}/agendamento/horariosDisponiveis/`
+        );
+
+        check(responseConsultaHorarios, {
+            'status da lista de horários deve ser 200': (r) => r.status === 200,
+        });
+
+        const retornoDadosConsulta = responseConsultaHorarios.json();
+        dataParaMarcacao = escolherDataEHorarios(retornoDadosConsulta, dados);
+
+    });
+
+    group('Marcar agendamento com sucesso', function () {
+
+        payloadMarcarHorario.dataAgendada = dataParaMarcacao.data;
+        payloadMarcarHorario.horarioAgendado = dataParaMarcacao.horario;
+        payloadMarcarHorario.servico = dataParaMarcacao.servico;
+
+        responseMarcarAgendamento = http.post(
+            `${BASE_URL}/agendamento/marcar`,
+            JSON.stringify(payloadMarcarHorario),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        trendTempoMarcarAgendamento.add(responseMarcarAgendamento.timings.duration);
+
+        check(responseMarcarAgendamento, {
+            'status da marcação deve ser 201': (resp) => resp.status === 201,
+            'mensagem de marcação deve ser de sucesso': (resp) =>
+                resp.json('message') === 'Agendamento realizado com sucesso!',
+        });
+    });
+
+    group('Consultar horários agendados', function () {
+
+        let responseConsultaHorarios = http.get(
+            `${BASE_URL}/agendamento/horariosAgendados/${encodeURIComponent(payloadMarcarHorario.dataAgendada)}`
+        );
+
+        const dados = JSON.parse(responseConsultaHorarios.body);
+
+        check(responseConsultaHorarios, {
+            "o horário agendado deve estar presente": () =>
+                dados.horariosAgendados.some(
+                    (item) =>
+                        item.dataAgendada === payloadMarcarHorario.dataAgendada &&
+                        item.horarioAgendado === payloadMarcarHorario.horarioAgendado &&
+                        item.telefoneCliente === payloadMarcarHorario.telefoneCliente
+                )
+        });
+    });
+
+    group('Desmarcar os horários agendados', function () {
+
+        let responseDesmarcarAgendamento = http.put(`${BASE_URL}/agendamento/desmarcar`,
+            JSON.stringify(payloadMarcarHorario),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+        check(responseDesmarcarAgendamento, {
+            'status da desmarcação deve ser 200': (resp) => resp.status === 200,
+            'mensagem deve ser de sucesso': (resp) =>
+                resp.json('message') === 'Horário agendado foi desmarcado.',
+        });
+    });
+    sleep(1)
+}
